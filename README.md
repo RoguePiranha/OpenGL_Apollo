@@ -1,1 +1,1 @@
-# OpenGL_Apollo
+# Apollo Lander OpenGL Setup
