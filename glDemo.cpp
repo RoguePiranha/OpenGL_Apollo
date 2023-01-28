@@ -14,6 +14,149 @@ using namespace std;
  * Demo
  * Test structure to capture the LM that will move around the screen
  *************************************************************************/
+class LMState {
+    LMState(): gravity(-1.625), thrust(45000.000), weight(15103.000)  {}
+private:
+    double altitude;
+    double position;
+    double horizontalVelocity;
+    double verticalVelocity;
+    double horizontalAcceleration;
+    double verticalAcceleration;
+    double angles;
+    
+    double degreesFromRadians(double r);
+    double radiansFromDegrees(double d);
+    double totalVelocity();
+public:
+    const double gravity;
+    const double thrust;
+    const double weight;
+    
+    void retrieveUserInput();
+    void fuelConsumption();
+    void applyInertia();
+    void applyGravity();
+    void applyThrust();
+    void updateAngle(double d);
+    
+};
+
+class physics {
+private:
+    int timer = 0;
+    double aRadians = 0;
+    double accelerationThrust = 0;
+    double ddxThrust = 0;
+    double ddyThrust = 0;
+    double ddx = 0;
+    double ddy = 0;
+    double v = 0;
+    double aDegrees = 0;
+    
+public:
+    // Getters
+    double getTimer() {
+        return timer;
+    }
+
+    double getRadians() {
+        return aRadians;
+    }
+
+    double getAccelerationThrust() {
+        return accelerationThrust;
+    }
+
+    double getDdxThrust() {
+        return ddxThrust;
+    }
+
+    double getDdyThrust() {
+        return ddyThrust;
+    }
+
+    double getDdx() {
+        return ddx;
+    }
+
+    double getDdy() {
+        return ddy;
+    }
+
+    double getV() {
+        return v;
+    }
+
+    double getDegrees() {
+        return aDegrees;
+    }
+
+    // setters
+
+    void setTimer(double t) {
+        timer = t;
+    }
+
+    void setRadians(double r) {
+        aRadians = r;
+    }
+
+    void setAccelerationThrust(double at) {
+        accelerationThrust = at;
+    }
+
+    void setDdxThrust(double dt) {
+        ddxThrust = dt;
+    }
+
+    void setDdyThrust(double dt) {
+        ddyThrust = dt;
+    }
+
+    void setDdx(double d) {
+        ddx = d;
+    }
+
+    void setDdy(double d) {
+        ddy = d;
+    }
+
+    void setV(double vel) {
+        v = vel;
+    }
+
+    void setDegrees(double d) {
+        aDegrees = d;
+    }
+
+    
+    double computeDistance(double s, double v, double a, double t) {
+        return s + v * t + 0.5 * a * t * t;
+    }
+
+    double computeAcceleration(double f, double m) {
+        return f / m;
+    }
+    double computeVelocity(double v, double a, double t) {
+        return v + a * t;
+    }
+    double computeVerticalComponent(double a, double total) {
+        return total * cos(a);
+    }
+    double computeHorizontalComponent(double a, double total) {
+        return total * sin(a);
+    }
+    double computeTotalComponent(double x, double y) {
+        return sqrt((x * x) + (y * y));
+    }
+    double radiansFromDegrees(double d) {
+        double pi = 2 * asin(1.0);
+        return d * 2 * pi / 360;
+    }
+};
+
+
 class Demo
 {
 public:
