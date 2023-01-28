@@ -8,6 +8,7 @@
 #include "uiInteract.h"
 #include "uiDraw.h"
 #include "ground.h"
+#include <vector>
 using namespace std;
 
 /*************************************************************************
@@ -23,7 +24,12 @@ public:
           ptLM(ptUpperRight.getX() / 2.0, ptUpperRight.getY() / 2.0),
           ground(ptUpperRight)
    { 
-
+	   // create a bunch of stars
+       for (int i = 0; i < 100; i++)
+       {
+           Point pt(random(0, (int)ptUpperRight.getX()), random(0, (int)ptUpperRight.getY()));
+           stars.push_back(pt);
+       };
       phase = random(0, 255);
    }
 
@@ -34,6 +40,7 @@ public:
    unsigned char phase;  // phase of the star's blinking
    Ground ground;
    Point ptStar;
+   vector<Point> stars;
 };
 
 /*************************************
@@ -75,6 +82,10 @@ void callBack(const Interface *pUI, void * p)
 
    // draw our little star
    gout.drawStar(pDemo->ptStar, pDemo->phase++);
+   
+   // draw a bunch of stars
+   for (int i = 0; i < pDemo->stars.size(); i++)
+	   gout.drawStar(pDemo->stars[i], pDemo->phase++);
 }
 
 /*********************************
@@ -90,6 +101,8 @@ int WINAPI wWinMain(
    _In_ PWSTR pCmdLine, 
    _In_ int nCmdShow)
 #else // !_WIN32
+
+
 int main(int argc, char ** argv)
 #endif // !_WIN32
 {
