@@ -12,6 +12,20 @@
 #include <iostream>
 using namespace std;
 
+/*************************************************************
+ * 1. Name:
+ *           Andrew Swayze, Isaac Radford, Samuel Casellas
+ * 2. Assignment Name:
+ *      Lab 04: Apollo 11 Visuals
+ * 3. Assignment Description:
+ *      Simulate the Apollo 11 landing
+ * 4. What was the hardest part? Be as specific as possible.
+ *      The hardest part was getting the speed to calculate correctly when the lunar module had stopped.
+ *      This was fixed after adding a second LM object that held the previous LM position.
+ * 5. How long did it take for you to complete the assignment?
+ *      This took us somewhere around 3 to 4 hours.
+ *****************************************************************/
+
 /*************************************************************************
  * Demo
  * Test structure to capture the LM that will move around the screen
