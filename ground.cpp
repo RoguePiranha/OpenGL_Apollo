@@ -18,11 +18,7 @@ const double TEXTURE = 3.0;   // size of the small features such as rocks
 
  /************************************************************************
   * GROUND constructor
-<<<<<<< HEAD
-  * Create a new grond object
-=======
   * Create a new ground object
->>>>>>> d186f7a5ee84f6c63655f3b974038d294f851b6e
   ************************************************************************/
 Ground::Ground(const Point & ptUpperRight) : ptUpperRight(ptUpperRight)
 {
