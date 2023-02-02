@@ -52,9 +52,8 @@ double physics::getV() {
 }
 
 double physics::getDegrees() {
-	return aDegrees;
+    return aDegrees;
 }
-
 // setters
 
 void physics::setTimer(double t) {

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7EF0197D298A13C000C5FF87 /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EF0197B298A13C000C5FF87 /* physics.cpp */; };
+		7EF233D4298B6DCC00032CBD /* director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EF233D2298B6DCC00032CBD /* director.cpp */; };
+		7EF233D7298B6F2300032CBD /* gameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EF233D5298B6F2300032CBD /* gameState.cpp */; };
 		C1D4EAE92577F57B002B56E3 /* uiDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D4EAE02577F573002B56E3 /* uiDraw.cpp */; };
 		C1D4EAEA2577F57B002B56E3 /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D4EAE12577F574002B56E3 /* point.cpp */; };
 		C1D4EAEB2577F57B002B56E3 /* glDemo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D4EAE22577F575002B56E3 /* glDemo.cpp */; };
@@ -29,6 +32,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7EF0197B298A13C000C5FF87 /* physics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = physics.cpp; sourceTree = "<group>"; };
+		7EF0197C298A13C000C5FF87 /* physics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = physics.hpp; sourceTree = "<group>"; };
+		7EF233D2298B6DCC00032CBD /* director.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = director.cpp; sourceTree = "<group>"; };
+		7EF233D3298B6DCC00032CBD /* director.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = director.hpp; sourceTree = "<group>"; };
+		7EF233D5298B6F2300032CBD /* gameState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gameState.cpp; sourceTree = "<group>"; };
+		7EF233D6298B6F2300032CBD /* gameState.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gameState.hpp; sourceTree = "<group>"; };
 		C1D4EAD32577F487002B56E3 /* Lab04 -Apollo-11-Visuals */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Lab04 -Apollo-11-Visuals"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1D4EAE02577F573002B56E3 /* uiDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uiDraw.cpp; sourceTree = "<group>"; };
 		C1D4EAE12577F574002B56E3 /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = point.cpp; sourceTree = "<group>"; };
@@ -60,6 +69,12 @@
 			isa = PBXGroup;
 			children = (
 				C1D4EAE22577F575002B56E3 /* glDemo.cpp */,
+				7EF0197B298A13C000C5FF87 /* physics.cpp */,
+				7EF233D5298B6F2300032CBD /* gameState.cpp */,
+				7EF233D6298B6F2300032CBD /* gameState.hpp */,
+				7EF233D2298B6DCC00032CBD /* director.cpp */,
+				7EF233D3298B6DCC00032CBD /* director.hpp */,
+				7EF0197C298A13C000C5FF87 /* physics.hpp */,
 				C1D4EAE32577F575002B56E3 /* ground.cpp */,
 				C1D4EAE82577F57A002B56E3 /* ground.h */,
 				C1D4EAE12577F574002B56E3 /* point.cpp */,
@@ -147,6 +162,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D4EAED2577F57B002B56E3 /* uiInteract.cpp in Sources */,
+				7EF233D7298B6F2300032CBD /* gameState.cpp in Sources */,
+				7EF233D4298B6DCC00032CBD /* director.cpp in Sources */,
+				7EF0197D298A13C000C5FF87 /* physics.cpp in Sources */,
 				C1D4EAEA2577F57B002B56E3 /* point.cpp in Sources */,
 				C1D4EAE92577F57B002B56E3 /* uiDraw.cpp in Sources */,
 				C1D4EAEC2577F57B002B56E3 /* ground.cpp in Sources */,
