@@ -25,12 +25,6 @@ const double tTime = 0.1;
  * Test structure to capture the LM that will move around the screen
  *************************************************************************/
 
-double velocity(Point ptLM, Point ptLM2)
-{
-    double velocity = sqrt(pow(ptLM.getX() - ptLM2.getX(), 2) + pow(ptLM.getY() - ptLM2.getY(), 2));
-    return velocity;
-}
-
 class Demo
 {
 public:
@@ -95,7 +89,7 @@ public:
  * time has passed and put the drawing on the screen.
  **************************************/
 
-physics *phys;
+physics *phys = new physics();
 
 void callBack(const Interface *pUI, void *p)
 {
