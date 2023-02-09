@@ -17,7 +17,7 @@ using namespace std;
 const double gravity = -1.625;
 const double thrust = 45000.000;
 const double weight = 15103.000;
-const double tTime = 1 / 3;
+const double tTime = 0.1;
 
 /*************************************************************************
  * Demo
@@ -188,7 +188,7 @@ public:
           dx(0), dy(0),
           y(ptUpperRight.getY() - 80.0),
           x(ptUpperRight.getX() - 100.0),
-          down(-1.625)
+          down(gravity)
    { 
 	   // create a bunch of stars
        for (int i = 0; i < 49; i++)
@@ -251,6 +251,7 @@ void setPtLM(Demo *pDemo){
     
 }
 
+physics *phys = new physics();
 
 void callBack(const Interface *pUI, void * p)
 {
@@ -261,73 +262,93 @@ void callBack(const Interface *pUI, void * p)
 
    Demo * pDemo = (Demo *)p;
     
+
+    // ???
+//    if(!pUI->isUp())
+//    {
+//        pDemo->ptLM.addY(pDemo->down);
+//    }
     
     
-    physics *phys = new physics();
-
-    if(!pUI->isUp())
-    {
-        pDemo->ptLM.addY(pDemo -> down);
-    }
+//
+//    Repeat steps 3 and 4 to update the velocity and position of the Lunar Module at each time step.
+//
+//
     
-   // move the ship around
-    if (pDemo -> gameEnd == false){
+    
+    //  1. Compute the net force acting on the Lunar Module: This is equal to the gravitational force acting in the downward direction, minus the force due to the thrusters acting in the upward direction.
+    
+    // Compute the horizontal and vertical components of the acceleration
+    double ddxThrust = phys->computeHorizontalComponent(pDemo->angle, phys->getAccelerationThrust());
+    double ddyThrust = phys->computeVerticalComponent(pDemo->angle, phys->getAccelerationThrust());
+    // Compute the total acceleration
+    phys->setDdx(ddxThrust);
+    phys->setDdy(ddyThrust + gravity);
+    
+    // move the ship around
+     if (pDemo -> gameEnd == false){
 
+         if (pUI->isRight()) {
+             pDemo->fuel-=1;
+             pDemo->angle-=0.06;
+         }
+            
+         if (pUI->isLeft()) {
+             pDemo->fuel-=1;
+             pDemo->angle+=0.06;
+         }
+            
+         if (pUI->isUp()) {
+             // TODO
+//             double moveSide = phys->computeHorizontalComponent(pDemo->angle, 2);
+//             double moveUp = phys->computeVerticalComponent(pDemo->angle, 2);
+//             pDemo->ptLM.addY(ddyThrust);
+//             pDemo->ptLM.addX(-ddxThrust);
+             pDemo->fuel-=10;
+             
+             //
+             //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
+             // What about when accelerating up at an angle and not straight up?
+             phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
+         } else {
+             phys->setAccelerationThrust(0.0);
+         }
+         
+         
+         //    Use the acceleration to update the velocity of the Lunar Module: The velocity is given by the derivative of the position with respect to time.
 
-        if (pUI->isRight()) {
-            
-            pDemo->fuel-=1;
-            pDemo-> angle+=0.06;
-        }
-           
-        if (pUI->isLeft()) {
-            pDemo->fuel-=1;
-            pDemo-> angle-=0.06;
-        }
-           
-        if (pUI->isUp()) {
-            double moveSide = phys->computeHorizontalComponent(pDemo->angle, 2);
-            double moveUp = phys->computeVerticalComponent(pDemo->angle, 2);
-            pDemo->ptLM.addY(moveUp);
-            pDemo->ptLM.addX(-moveSide);
-            
-            pDemo->fuel-=10;
-            
-        }
-          
-        if (pUI->isDown()) {
-            pDemo->ptLM.addY(-1.0);
-            pDemo->fuel-=10;
-        }
+         // Compute the new velocity
+         pDemo->dx = phys->computeVelocity(pDemo->dx, phys->getDdx(), tTime);
+         pDemo->dy = phys->computeVelocity(pDemo->dy, phys->getDdy(), tTime);
+         
+         //    Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
+         // Compute the new position
+         pDemo->x = phys->computeDistance(pDemo->x, -pDemo->dx, phys->getDdx(), tTime);
+         pDemo->y = phys->computeDistance(pDemo->y, pDemo->dy, phys->getDdy(), tTime);
+
+         
+         // Compute the total velocity: Maybe not needed??
+         // v = phys->computeTotalComponent(dx, dy)
+         
+         pDemo->ptLM.setX(pDemo->x);
+         pDemo->ptLM.setY(pDemo->y);
+         
         
-    }
-    
-    else {
-        if (pUI->isRight()) {
-            pDemo->fuel-=0;
-            pDemo-> angle-=0;
-        }
-           
-        if (pUI->isLeft()) {
-            pDemo->fuel-=0;
-            pDemo-> angle+=0;
-        }
-           
-        if (pUI->isUp()) {
-            pDemo->ptLM.addX(0);
-            pDemo->ptLM.addY(0);
-            pDemo-> fuel -=0;
-            pDemo->speed = phys->computeVelocity(pDemo->speed, phys->computeAcceleration(thrust, weight), 1);
-        }
-          
-        if (pUI->isDown()) {
-            pDemo->ptLM.addY(0.0);
-        }
-    }
-//   applyInertia(pDemo);
-//    pDemo->speed = phys->computeVelocity(pDemo->speed, 0, 1);
 
-    pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+
+
+     //   applyInertia(pDemo);
+     //    pDemo->speed = phys->computeVelocity(pDemo->speed, 0, 1);
+         
+         pDemo->speed = phys->computeTotalComponent(pDemo->dx, pDemo->dy);
+
+         //pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+         
+     }
+ 
+    
+    
+    
     
    // draw the ground
    pDemo->ground.draw(gout);
@@ -338,18 +359,20 @@ void callBack(const Interface *pUI, void * p)
                     pUI->isUp(), pUI->isLeft(), pUI->isRight());
 
    //Calculate the altitude
-    pDemo-> altitude = pDemo -> ground.getElevation(pDemo->ptLM);
+    pDemo->altitude = pDemo->ground.getElevation(pDemo->ptLM);
     
    //Calculate the speed
 //   pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+   
     
-   pDemo->ptLM2 = pDemo->ptLM;
+   // Sam's edit
+   // pDemo->ptLM2 = pDemo->ptLM;
     
    // put some text on the screen
    gout.setPosition(Point(20.0, 375.0));
     gout << "Fuel: " << pDemo->fuel << "\n";
-    gout << "Altitude: " << pDemo-> altitude << "\n";
-    gout << "Speed: " << pDemo-> speed << "\n";
+    gout << "Altitude: " << pDemo->altitude << "\n";
+    gout << "Speed: " << pDemo->speed << "\n";
     
 
    // draw our little star
@@ -423,7 +446,7 @@ int main(int argc, char ** argv)
 #endif // !_WIN32
 {
    // Initialize OpenGL
-   Point ptUpperRight(400.0, 400.0);
+   Point ptUpperRight(1000.0, 1000.0);
    Interface ui(0, NULL, 
                 "Open GL Demo", 
                  ptUpperRight);
