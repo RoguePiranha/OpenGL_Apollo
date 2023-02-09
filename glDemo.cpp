@@ -1,6 +1,6 @@
 /**********************************************************************
  * GL Demo
- * Just a simple program to demonstrate how to create an Open GL window, 
+ * Just a simple program to demonstrate how to create an Open GL window,
  * draw something on the window, and accept simple user input
  **********************************************************************/
 
@@ -23,23 +23,23 @@ const double tTime = 0.1;
  * Demo
  * Test structure to capture the LM that will move around the screen
  *************************************************************************/
-class LMState {
-    LMState(): gravity(-1.625), thrust(45000.000), weight(15103.000)  {}
-private:
+class LMState
+{
+    LMState() : gravity(-1.625), thrust(45000.000), weight(15103.000) {}
 
+private:
 public:
     const double gravity;
     const double thrust;
     const double weight;
-    
+
     void retrieveUserInput();
     void fuelConsumption();
     void applyInertia();
     void applyGravity();
     void applyThrust();
     void updateAngle(double d);
-    
-    
+
     // Everything in this public was set as a private variable
     double altitude;
     double position;
@@ -48,15 +48,14 @@ public:
     double horizontalAcceleration;
     double verticalAcceleration;
     double angles;
-    
+
     double degreesFromRadians(double r);
     double radiansFromDegrees(double d);
     double totalVelocity();
-
-    
 };
 
-class physics {
+class physics
+{
 private:
     int timer = 0;
     double aRadians = 0;
@@ -67,104 +66,128 @@ private:
     double ddy = 0;
     double v = 0;
     double aDegrees = 0;
-    
+
 public:
     // Getters
-    double getTimer() {
+    double getTimer()
+    {
         return timer;
     }
 
-    double getRadians() {
+    double getRadians()
+    {
         return aRadians;
     }
 
-    double getAccelerationThrust() {
+    double getAccelerationThrust()
+    {
         return accelerationThrust;
     }
 
-    double getDdxThrust() {
+    double getDdxThrust()
+    {
         return ddxThrust;
     }
 
-    double getDdyThrust() {
+    double getDdyThrust()
+    {
         return ddyThrust;
     }
 
-    double getDdx() {
+    double getDdx()
+    {
         return ddx;
     }
 
-    double getDdy() {
+    double getDdy()
+    {
         return ddy;
     }
 
-    double getV() {
+    double getV()
+    {
         return v;
     }
 
-    double getDegrees() {
+    double getDegrees()
+    {
         return aDegrees;
     }
 
     // setters
 
-    void setTimer(double t) {
+    void setTimer(double t)
+    {
         timer = t;
     }
 
-    void setRadians(double r) {
+    void setRadians(double r)
+    {
         aRadians = r;
     }
 
-    void setAccelerationThrust(double at) {
+    void setAccelerationThrust(double at)
+    {
         accelerationThrust = at;
     }
 
-    void setDdxThrust(double dt) {
+    void setDdxThrust(double dt)
+    {
         ddxThrust = dt;
     }
 
-    void setDdyThrust(double dt) {
+    void setDdyThrust(double dt)
+    {
         ddyThrust = dt;
     }
 
-    void setDdx(double d) {
+    void setDdx(double d)
+    {
         ddx = d;
     }
 
-    void setDdy(double d) {
+    void setDdy(double d)
+    {
         ddy = d;
     }
 
-    void setV(double vel) {
+    void setV(double vel)
+    {
         v = vel;
     }
 
-    void setDegrees(double d) {
+    void setDegrees(double d)
+    {
         aDegrees = d;
     }
 
-    
-    double computeDistance(double s, double v, double a, double t) {
+    double computeDistance(double s, double v, double a, double t)
+    {
         return s + v * t + 0.5 * a * t * t;
     }
 
-    double computeAcceleration(double f, double m) {
+    double computeAcceleration(double f, double m)
+    {
         return f / m;
     }
-    double computeVelocity(double v, double a, double t) {
+    double computeVelocity(double v, double a, double t)
+    {
         return v + a * t;
     }
-    double computeVerticalComponent(double a, double total) {
+    double computeVerticalComponent(double a, double total)
+    {
         return total * cos(a);
     }
-    double computeHorizontalComponent(double a, double total) {
+    double computeHorizontalComponent(double a, double total)
+    {
         return total * sin(a);
     }
-    double computeTotalComponent(double x, double y) {
+    double computeTotalComponent(double x, double y)
+    {
         return sqrt((x * x) + (y * y));
     }
-    double radiansFromDegrees(double d) {
+    double radiansFromDegrees(double d)
+    {
         double pi = 2 * asin(1.0);
         return d * 2 * pi / 360;
     }
@@ -179,59 +202,57 @@ double velocity(Point ptLM, Point ptLM2)
 class Demo
 {
 public:
-   Demo(const Point& ptUpperRight) :
-          angle(0.0),
-          ptStar(ptUpperRight.getX() - 20.0, ptUpperRight.getY() - 20.0),
-          ptLM(ptUpperRight.getX() - 100.0, ptUpperRight.getY() - 80.0),
-          ptLM2(ptLM),
-          ground(ptUpperRight), fuel(5000), altitude(0), speed(0),
-          dx(0), dy(0),
-          y(ptUpperRight.getY() - 80.0),
-          x(ptUpperRight.getX() - 100.0),
-          down(gravity)
-   { 
-	   // create a bunch of stars
-       for (int i = 0; i < 49; i++)
-       {
-           Point pt(random(0, (int)ptUpperRight.getX()), random(0, (int)ptUpperRight.getY()));
-           
-           if (ground.getElevation(pt) > 0)
-           {
-               stars.push_back(pt);
-           }
-           
-       };
-      phase = random(0, 255);
-   }
+    Demo(const Point &ptUpperRight) : angle(0.0),
+                                      ptStar(ptUpperRight.getX() - 20.0, ptUpperRight.getY() - 20.0),
+                                      ptLM(ptUpperRight.getX() - 100.0, ptUpperRight.getY() - 80.0),
+                                      ptLM2(ptLM),
+                                      ground(ptUpperRight), fuel(5000), altitude(0), speed(0),
+                                      dx(0), dy(0),
+                                      y(ptUpperRight.getY() - 80.0),
+                                      x(ptUpperRight.getX() - 100.0),
+                                      down(gravity)
+    {
+        // create a bunch of stars
+        for (int i = 0; i < 49; i++)
+        {
+            Point pt(random(0, (int)ptUpperRight.getX()), random(0, (int)ptUpperRight.getY()));
 
-   // this is just for test purposes.  Don't make member variables public!
-   Point ptLM;           // location of the LM on the screen
-   Point ptLM2;          // Location of previous LM on screen
+            if (ground.getElevation(pt) > 0)
+            {
+                stars.push_back(pt);
+            }
+        };
+        phase = random(0, 255);
+    }
+
+    // this is just for test purposes.  Don't make member variables public!
+    Point ptLM;  // location of the LM on the screen
+    Point ptLM2; // Location of previous LM on screen
     int ptLMx;
     int ptLMy;
-   Point ptUpperRight;   // size of the screen
-   double angle;         // angle the LM is pointing
-   unsigned char phase;  // phase of the star's blinking
-   Ground ground;
-   Point ptStar;
-   vector<Point> stars;
-    
-   int fuel;
-   int altitude;
-   double speed;
-   bool gameEnd = false;
-   double dx;
-   double dy;
-    
-   double x;
-   double y;
-    
-   double down;
-    
-   void setDown(double d)
-   {
-       down = d;
-   }
+    Point ptUpperRight;  // size of the screen
+    double angle;        // angle the LM is pointing
+    unsigned char phase; // phase of the star's blinking
+    Ground ground;
+    Point ptStar;
+    vector<Point> stars;
+
+    int fuel;
+    int altitude;
+    double speed;
+    bool gameEnd = false;
+    double dx;
+    double dy;
+
+    double x;
+    double y;
+
+    double down;
+
+    void setDown(double d)
+    {
+        down = d;
+    }
 };
 
 /*************************************
@@ -242,190 +263,179 @@ public:
  * time has passed and put the drawing on the screen.
  **************************************/
 
-
-
 // set the ptLMx and ptLMy to the ptLM
-void setPtLM(Demo *pDemo){
+void setPtLM(Demo *pDemo)
+{
     pDemo->ptLMx = pDemo->ptLM.getX();
     pDemo->ptLMy = pDemo->ptLM.getY();
-    
 }
 
 physics *phys = new physics();
 
-void callBack(const Interface *pUI, void * p)
+void callBack(const Interface *pUI, void *p)
 {
-   ogstream gout;
+    ogstream gout;
 
-   // the first step is to cast the void pointer into a game object. This
-   // is the first step of every single callback function in OpenGL. 
+    // the first step is to cast the void pointer into a game object. This
+    // is the first step of every single callback function in OpenGL.
 
-   Demo * pDemo = (Demo *)p;
-    
+    Demo *pDemo = (Demo *)p;
 
     // ???
-//    if(!pUI->isUp())
-//    {
-//        pDemo->ptLM.addY(pDemo->down);
-//    }
-    
-    
-//
-//    Repeat steps 3 and 4 to update the velocity and position of the Lunar Module at each time step.
-//
-//
-    
-    
+    //    if(!pUI->isUp())
+    //    {
+    //        pDemo->ptLM.addY(pDemo->down);
+    //    }
+
+    //
+    //    Repeat steps 3 and 4 to update the velocity and position of the Lunar Module at each time step.
+    //
+    //
+
     //  1. Compute the net force acting on the Lunar Module: This is equal to the gravitational force acting in the downward direction, minus the force due to the thrusters acting in the upward direction.
-    
+
     // Compute the horizontal and vertical components of the acceleration
     double ddxThrust = phys->computeHorizontalComponent(pDemo->angle, phys->getAccelerationThrust());
     double ddyThrust = phys->computeVerticalComponent(pDemo->angle, phys->getAccelerationThrust());
     // Compute the total acceleration
     phys->setDdx(ddxThrust);
     phys->setDdy(ddyThrust + gravity);
-    
+
     // move the ship around
-     if (pDemo -> gameEnd == false){
+    if (pDemo->gameEnd == false)
+    {
 
-         if (pUI->isRight()) {
-             pDemo->fuel-=1;
-             pDemo->angle-=0.06;
-         }
-            
-         if (pUI->isLeft()) {
-             pDemo->fuel-=1;
-             pDemo->angle+=0.06;
-         }
-            
-         if (pUI->isUp()) {
-             // TODO
-//             double moveSide = phys->computeHorizontalComponent(pDemo->angle, 2);
-//             double moveUp = phys->computeVerticalComponent(pDemo->angle, 2);
-//             pDemo->ptLM.addY(ddyThrust);
-//             pDemo->ptLM.addX(-ddxThrust);
-             pDemo->fuel-=10;
-             
-             //
-             //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
-             // What about when accelerating up at an angle and not straight up?
-             phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
-         } else {
-             phys->setAccelerationThrust(0.0);
-         }
-         
-         
-         //    Use the acceleration to update the velocity of the Lunar Module: The velocity is given by the derivative of the position with respect to time.
+        if (pUI->isRight())
+        {
+            pDemo->fuel -= 1;
+            pDemo->angle -= 0.06;
+        }
 
-         // Compute the new velocity
-         pDemo->dx = phys->computeVelocity(pDemo->dx, phys->getDdx(), tTime);
-         pDemo->dy = phys->computeVelocity(pDemo->dy, phys->getDdy(), tTime);
-         
-         //    Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
-         // Compute the new position
-         pDemo->x = phys->computeDistance(pDemo->x, -pDemo->dx, phys->getDdx(), tTime);
-         pDemo->y = phys->computeDistance(pDemo->y, pDemo->dy, phys->getDdy(), tTime);
+        if (pUI->isLeft())
+        {
+            pDemo->fuel -= 1;
+            pDemo->angle += 0.06;
+        }
 
-         
-         // Compute the total velocity: Maybe not needed??
-         // v = phys->computeTotalComponent(dx, dy)
-         
-         pDemo->ptLM.setX(pDemo->x);
-         pDemo->ptLM.setY(pDemo->y);
-         
-        
+        if (pUI->isUp())
+        {
+            // TODO
+            //             double moveSide = phys->computeHorizontalComponent(pDemo->angle, 2);
+            //             double moveUp = phys->computeVerticalComponent(pDemo->angle, 2);
+            //             pDemo->ptLM.addY(ddyThrust);
+            //             pDemo->ptLM.addX(-ddxThrust);
+            pDemo->fuel -= 10;
 
+            //
+            //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
+            // What about when accelerating up at an angle and not straight up?
+            phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
+        }
+        else
+        {
+            phys->setAccelerationThrust(0.0);
+        }
 
+        //    Use the acceleration to update the velocity of the Lunar Module: The velocity is given by the derivative of the position with respect to time.
 
-     //   applyInertia(pDemo);
-     //    pDemo->speed = phys->computeVelocity(pDemo->speed, 0, 1);
-         
-         pDemo->speed = phys->computeTotalComponent(pDemo->dx, pDemo->dy);
+        // Compute the new velocity
+        pDemo->dx = phys->computeVelocity(pDemo->dx, phys->getDdx(), tTime);
+        pDemo->dy = phys->computeVelocity(pDemo->dy, phys->getDdy(), tTime);
 
-         //pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
-         
-     }
- 
-    
-    
-    
-    
-   // draw the ground
-   pDemo->ground.draw(gout);
+        //    Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
+        // Compute the new position
+        pDemo->x = phys->computeDistance(pDemo->x, -pDemo->dx, phys->getDdx(), tTime);
+        pDemo->y = phys->computeDistance(pDemo->y, pDemo->dy, phys->getDdy(), tTime);
 
-   // draw the lander and its flames
-   gout.drawLander(pDemo->ptLM /*position*/, pDemo->angle /*angle*/);
-   gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, /*angle*/
-                    pUI->isUp(), pUI->isLeft(), pUI->isRight());
+        // Compute the total velocity: Maybe not needed??
+        // v = phys->computeTotalComponent(dx, dy)
 
-   //Calculate the altitude
+        pDemo->ptLM.setX(pDemo->x);
+        pDemo->ptLM.setY(pDemo->y);
+
+        //   applyInertia(pDemo);
+        //    pDemo->speed = phys->computeVelocity(pDemo->speed, 0, 1);
+
+        pDemo->speed = phys->computeTotalComponent(pDemo->dx, pDemo->dy);
+
+        // pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+    }
+
+    // draw the ground
+    pDemo->ground.draw(gout);
+
+    // draw the lander and its flames
+    gout.drawLander(pDemo->ptLM /*position*/, pDemo->angle /*angle*/);
+    gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, /*angle*/
+                          pUI->isUp(), pUI->isLeft(), pUI->isRight());
+
+    // Calculate the altitude
     pDemo->altitude = pDemo->ground.getElevation(pDemo->ptLM);
-    
-   //Calculate the speed
-//   pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
-   
-    
-   // Sam's edit
-   // pDemo->ptLM2 = pDemo->ptLM;
-    
-   // put some text on the screen
-   gout.setPosition(Point(20.0, 375.0));
+
+    // Calculate the speed
+    //   pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+
+    // Sam's edit
+    // pDemo->ptLM2 = pDemo->ptLM;
+
+    // put some text on the screen
+    gout.setPosition(Point(20.0, 375.0));
     gout << "Fuel: " << pDemo->fuel << "\n";
     gout << "Altitude: " << pDemo->altitude << "\n";
     gout << "Speed: " << pDemo->speed << "\n";
-    
 
-   // draw our little star
-   gout.drawStar(pDemo->ptStar, pDemo->phase++);
-   
-   // draw a bunch of stars
-   for (int i = 0; i < pDemo->stars.size(); i++)
-	   gout.drawStar(pDemo->stars[i], pDemo->phase++);
+    // draw our little star
+    gout.drawStar(pDemo->ptStar, pDemo->phase++);
 
-    
+    // draw a bunch of stars
+    for (int i = 0; i < pDemo->stars.size(); i++)
+        gout.drawStar(pDemo->stars[i], pDemo->phase++);
+
     // Game over if you run out of fuel.
-    if (pDemo->fuel <= 0) {
-       gout.setPosition(Point(160.0, 200.0));
-       gout << "Game Over" << "\n";
-       gout.setPosition(Point(130, 170.0));
-       gout << "You ran out of fuel!" << "\n";
-       pDemo -> gameEnd = true;
-    
-        pDemo -> setDown(0);
-    
-    }
-
-    if (pDemo -> ground.hitGround(pDemo -> ptLM, 20))
+    if (pDemo->fuel <= 0)
     {
         gout.setPosition(Point(160.0, 200.0));
-        gout << "Game Over" << "\n";
-        gout.setPosition(Point(152.0, 170.0));
-        gout << "You crashed!" << "\n";
-        pDemo -> gameEnd = true;
-        pDemo -> setDown(0);
+        gout << "Game Over"
+             << "\n";
+        gout.setPosition(Point(130, 170.0));
+        gout << "You ran out of fuel!"
+             << "\n";
+        pDemo->gameEnd = true;
+
+        pDemo->setDown(0);
     }
-    
+
+    if (pDemo->ground.hitGround(pDemo->ptLM, 20))
+    {
+        gout.setPosition(Point(160.0, 200.0));
+        gout << "Game Over"
+             << "\n";
+        gout.setPosition(Point(152.0, 170.0));
+        gout << "You crashed!"
+             << "\n";
+        pDemo->gameEnd = true;
+        pDemo->setDown(0);
+    }
+
     if (pDemo->ground.onPlatform(pDemo->ptLM, 20.0) && pDemo->speed <= 4)
-        {
-            gout.setPosition(Point(137.0, 300.0));
-            gout << "You landed safely"
-                 << "\n";
-            pDemo -> gameEnd = true;
-            pDemo -> setDown(0);
-        }
-        else if (pDemo->ground.onPlatform(pDemo->ptLM, 20.0) && pDemo->speed > 4)
-        {
-            gout.setPosition(Point(160.0, 200.0));
-            gout << "Game Over"
-                 << "\n";
-            gout.setPosition(Point(130.0, 170.0));
-            gout << "You crashed into the ground"
-                 << "\n";
-            pDemo -> gameEnd = true;
-            pDemo -> setDown(0);
-            
-        }
-    
+    {
+        gout.setPosition(Point(137.0, 300.0));
+        gout << "You landed safely"
+             << "\n";
+        pDemo->gameEnd = true;
+        pDemo->setDown(0);
+    }
+    else if (pDemo->ground.onPlatform(pDemo->ptLM, 20.0) && pDemo->speed > 4)
+    {
+        gout.setPosition(Point(160.0, 200.0));
+        gout << "Game Over"
+             << "\n";
+        gout.setPosition(Point(130.0, 170.0));
+        gout << "You crashed into the ground"
+             << "\n";
+        pDemo->gameEnd = true;
+        pDemo->setDown(0);
+    }
 }
 
 /*********************************
@@ -436,26 +446,26 @@ void callBack(const Interface *pUI, void * p)
 #ifdef _WIN32_X
 #include <windows.h>
 int WINAPI wWinMain(
-   _In_ HINSTANCE hInstance, 
-   _In_opt_ HINSTANCE hPrevInstance, 
-   _In_ PWSTR pCmdLine, 
-   _In_ int nCmdShow)
-#else // !_WIN32
+    _In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ PWSTR pCmdLine,
+    _In_ int nCmdShow)
+#else  // !_WIN32
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 #endif // !_WIN32
 {
-   // Initialize OpenGL
-   Point ptUpperRight(1000.0, 1000.0);
-   Interface ui(0, NULL, 
-                "Open GL Demo", 
+    // Initialize OpenGL
+    Point ptUpperRight(1000.0, 1000.0);
+    Interface ui(0, NULL,
+                 "Open GL Demo",
                  ptUpperRight);
 
-   // Initialize the game class
-   Demo demo(ptUpperRight);
+    // Initialize the game class
+    Demo demo(ptUpperRight);
 
-   // set everything into action
-   ui.run(callBack, &demo);             
+    // set everything into action
+    ui.run(callBack, &demo);
 
-   return 0;
+    return 0;
 }
