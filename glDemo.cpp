@@ -25,12 +25,6 @@ const double tTime = 0.1;
  * Test structure to capture the LM that will move around the screen
  *************************************************************************/
 
-double velocity(Point ptLM, Point ptLM2)
-{
-    double velocity = sqrt(pow(ptLM.getX() - ptLM2.getX(), 2) + pow(ptLM.getY() - ptLM2.getY(), 2));
-    return velocity;
-}
-
 class Demo
 {
 public:
@@ -95,7 +89,7 @@ public:
  * time has passed and put the drawing on the screen.
  **************************************/
 
-physics *phys;
+physics *phys = new physics;
 
 void callBack(const Interface *pUI, void *p)
 {
@@ -118,32 +112,34 @@ void callBack(const Interface *pUI, void *p)
     // move the ship around
     if (pDemo->gameEnd == false)
     {
+        if (pDemo->fuel > 0) {
+            if (pUI->isRight())
+            {
+                pDemo->fuel -= 1;
+                pDemo->angle -= 0.06;
+            }
 
-        if (pUI->isRight())
-        {
-            pDemo->fuel -= 1;
-            pDemo->angle -= 0.06;
-        }
+            if (pUI->isLeft())
+            {
+                pDemo->fuel -= 1;
+                pDemo->angle += 0.06;
+            }
 
-        if (pUI->isLeft())
-        {
-            pDemo->fuel -= 1;
-            pDemo->angle += 0.06;
-        }
+            if (pUI->isUp())
+            {
+                pDemo->fuel -= 10;
+                if (pDemo->fuel < 0) pDemo->fuel = 0;
 
-        if (pUI->isUp())
-        {
-            // TODO
-            //             double moveSide = phys->computeHorizontalComponent(pDemo->angle, 2);
-            //             double moveUp = phys->computeVerticalComponent(pDemo->angle, 2);
-            //             pDemo->ptLM.addY(ddyThrust);
-            //             pDemo->ptLM.addX(-ddxThrust);
-            pDemo->fuel -= 10;
-
-            //
-            //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
-            // What about when accelerating up at an angle and not straight up?
-            phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
+                //
+                //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
+                phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
+            }
+            else
+            {
+                phys->setAccelerationThrust(0.0);
+            }
+            // draw the lander's flames (if fuel)
+            gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, pUI->isUp(), pUI->isLeft(), pUI->isRight());
         }
         else
         {
@@ -163,14 +159,16 @@ void callBack(const Interface *pUI, void *p)
         pDemo->ptLM.setY(pDemo->y);
 
         pDemo->speed = phys->computeTotalComponent(phys->dx, phys->dy);
+        
+       
     }
 
     // draw the ground
     pDemo->ground.draw(gout);
 
-    // draw the lander and its flames
+    // draw the lander
     gout.drawLander(pDemo->ptLM /*position*/, pDemo->angle /*angle*/);
-    gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, pUI->isUp(), pUI->isLeft(), pUI->isRight());
+    
 
     // Calculate the altitude
     pDemo->altitude = pDemo->ground.getElevation(pDemo->ptLM);
@@ -191,13 +189,9 @@ void callBack(const Interface *pUI, void *p)
     // Game over if you run out of fuel.
     if (pDemo->fuel <= 0)
     {
-        gout.setPosition(Point(160.0, 200.0));
-        gout << "Game Over"
-             << "\n";
-        gout.setPosition(Point(130, 170.0));
+        gout.setPosition(Point(130, 140.0));
         gout << "You ran out of fuel!"
              << "\n";
-        pDemo->gameEnd = true;
 
         pDemo->setDown(0);
     }
