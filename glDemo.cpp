@@ -130,7 +130,6 @@ void callBack(const Interface *pUI, void *p)
                 pDemo->fuel -= 10;
                 if (pDemo->fuel < 0) pDemo->fuel = 0;
 
-                //
                 //  2.  Compute the acceleration of the Lunar Module: The acceleration is given by the net force divided by the mass of the Lunar Module.
                 phys->setAccelerationThrust(phys->computeAcceleration(thrust, weight));
             }
@@ -150,8 +149,7 @@ void callBack(const Interface *pUI, void *p)
         phys->dx = phys->computeVelocity(phys->dx, phys->getDdx(), tTime);
         phys->dy = phys->computeVelocity(phys->dy, phys->getDdy(), tTime);
 
-        //    Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
-        // Compute the new position
+        //    3, Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
         pDemo->x = phys->computeDistance(pDemo->x, -phys->dx, phys->getDdx(), tTime);
         pDemo->y = phys->computeDistance(pDemo->y, phys->dy, phys->getDdy(), tTime);
 
