@@ -57,6 +57,8 @@ public:
 class physics
 {
 private:
+
+public:
     int timer = 0;
     double aRadians = 0;
     double accelerationThrust = 0;
@@ -64,10 +66,11 @@ private:
     double ddyThrust = 0;
     double ddx = 0;
     double ddy = 0;
+    double dx = 0;
+    double dy = 0;
     double v = 0;
     double aDegrees = 0;
-
-public:
+    
     // Getters
     double getTimer()
     {
@@ -263,13 +266,6 @@ public:
  * time has passed and put the drawing on the screen.
  **************************************/
 
-// set the ptLMx and ptLMy to the ptLM
-void setPtLM(Demo *pDemo)
-{
-    pDemo->ptLMx = pDemo->ptLM.getX();
-    pDemo->ptLMy = pDemo->ptLM.getY();
-}
-
 physics *phys = new physics();
 
 void callBack(const Interface *pUI, void *p)
@@ -280,17 +276,6 @@ void callBack(const Interface *pUI, void *p)
     // is the first step of every single callback function in OpenGL.
 
     Demo *pDemo = (Demo *)p;
-
-    // ???
-    //    if(!pUI->isUp())
-    //    {
-    //        pDemo->ptLM.addY(pDemo->down);
-    //    }
-
-    //
-    //    Repeat steps 3 and 4 to update the velocity and position of the Lunar Module at each time step.
-    //
-    //
 
     //  1. Compute the net force acting on the Lunar Module: This is equal to the gravitational force acting in the downward direction, minus the force due to the thrusters acting in the upward direction.
 
@@ -339,26 +324,18 @@ void callBack(const Interface *pUI, void *p)
         //    Use the acceleration to update the velocity of the Lunar Module: The velocity is given by the derivative of the position with respect to time.
 
         // Compute the new velocity
-        pDemo->dx = phys->computeVelocity(pDemo->dx, phys->getDdx(), tTime);
-        pDemo->dy = phys->computeVelocity(pDemo->dy, phys->getDdy(), tTime);
+        phys->dx = phys->computeVelocity(phys->dx, phys->getDdx(), tTime);
+        phys->dy = phys->computeVelocity(phys->dy, phys->getDdy(), tTime);
 
         //    Use the velocity to update the position of the Lunar Module: The position is given by the integral of the velocity with respect to time.
         // Compute the new position
-        pDemo->x = phys->computeDistance(pDemo->x, -pDemo->dx, phys->getDdx(), tTime);
-        pDemo->y = phys->computeDistance(pDemo->y, pDemo->dy, phys->getDdy(), tTime);
-
-        // Compute the total velocity: Maybe not needed??
-        // v = phys->computeTotalComponent(dx, dy)
+        pDemo->x = phys->computeDistance(pDemo->x, -phys->dx, phys->getDdx(), tTime);
+        pDemo->y = phys->computeDistance(pDemo->y, phys->dy, phys->getDdy(), tTime);
 
         pDemo->ptLM.setX(pDemo->x);
         pDemo->ptLM.setY(pDemo->y);
 
-        //   applyInertia(pDemo);
-        //    pDemo->speed = phys->computeVelocity(pDemo->speed, 0, 1);
-
-        pDemo->speed = phys->computeTotalComponent(pDemo->dx, pDemo->dy);
-
-        // pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
+        pDemo->speed = phys->computeTotalComponent(phys->dx, phys->dy);
     }
 
     // draw the ground
@@ -366,20 +343,13 @@ void callBack(const Interface *pUI, void *p)
 
     // draw the lander and its flames
     gout.drawLander(pDemo->ptLM /*position*/, pDemo->angle /*angle*/);
-    gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, /*angle*/
-                          pUI->isUp(), pUI->isLeft(), pUI->isRight());
+    gout.drawLanderFlames(pDemo->ptLM, pDemo->angle, pUI->isUp(), pUI->isLeft(), pUI->isRight());
 
     // Calculate the altitude
     pDemo->altitude = pDemo->ground.getElevation(pDemo->ptLM);
 
-    // Calculate the speed
-    //   pDemo->speed = velocity(pDemo->ptLM, pDemo->ptLM2);
-
-    // Sam's edit
-    // pDemo->ptLM2 = pDemo->ptLM;
-
     // put some text on the screen
-    gout.setPosition(Point(20.0, 375.0));
+    gout.setPosition(Point(20.0, 960.0));
     gout << "Fuel: " << pDemo->fuel << "\n";
     gout << "Altitude: " << pDemo->altitude << "\n";
     gout << "Speed: " << pDemo->speed << "\n";
@@ -417,7 +387,7 @@ void callBack(const Interface *pUI, void *p)
         pDemo->setDown(0);
     }
 
-    if (pDemo->ground.onPlatform(pDemo->ptLM, 20.0) && pDemo->speed <= 4)
+    if (pDemo->ground.onPlatform(pDemo->ptLM, 20.0) && phys->dy <= 4 && phys-> dx <= 2)
     {
         gout.setPosition(Point(137.0, 300.0));
         gout << "You landed safely"
