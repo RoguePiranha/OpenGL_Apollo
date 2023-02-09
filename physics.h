@@ -1,5 +1,5 @@
 class physics {
-private:
+public:
     double timer;
     double aRadians;            // Angle in radians
     double accelerationThrust;  // Acceleration due to thrust 
@@ -7,10 +7,11 @@ private:
     double ddyThrust;           // Vertical acceleration due to thrust
     double ddx;                 // Total horizontal acceleration
     double ddy;                 // Total vertical acceleration
+	double dx;
+    double dy;
 	double v;                   // Total velocity
 	double aDegrees;            // User input on the angle of the LM
-    
-public:
+	
     // constructor
     physics();
     
